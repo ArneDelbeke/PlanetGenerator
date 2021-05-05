@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace PlanetGenerator
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            SizeGenerator sizeGenerator = new SizeGenerator();
-            TimeSpanGenerator timeSpanGenerator = new TimeSpanGenerator();
+            var sizeGenerator = new SizeGenerator();
+            var timeSpanGenerator = new TimeSpanGenerator();
+            var tempGenerator = new TemperatureGenerator();
+            var waterGenerator = new WaterPrevelanceGenerator();
 
-            Generator generator = new Generator(sizeGenerator, timeSpanGenerator);
+            var generator = new Generator(sizeGenerator, timeSpanGenerator, tempGenerator, waterGenerator);
 
             RefreshPlanet(generator);
 
@@ -20,7 +21,7 @@ namespace PlanetGenerator
             }
         }
 
-        static void RefreshPlanet(Generator generator)
+        private static void RefreshPlanet(Generator generator)
         {
             Console.Clear();
             Console.WriteLine("Press SPACEBAR to generate a new planet \n");
@@ -35,6 +36,11 @@ namespace PlanetGenerator
             Console.WriteLine($"Duration of day: {Math.Round(planet.LengthOfDay.TotalHours)} hours");
             Console.WriteLine($"Duration of year: {Math.Round(planet.LengthOfYear.TotalDays)} earth days");
             Console.WriteLine($"Duration of year in local days: {planet.LocalDaysInYear} {planet.Name} days");
+            Console.WriteLine($"Water prevalence: {planet.WaterPrevelance.WaterPercentage}");
+            Console.WriteLine($"Freshwater: {planet.WaterPrevelance.FreshWater()}");
+            Console.WriteLine($"Saltwater: {planet.WaterPrevelance.SaltWater()}");
+            Console.WriteLine($"Surface water: {planet.WaterPrevelance.SurfaceWater()}");
+            Console.WriteLine($"Subterranean water: {planet.WaterPrevelance.SubterraneanWater()}");
         }
 
         private static Planet GeneratePlanet(Generator generator)

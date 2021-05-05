@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlanetGenerator
 {
     public class Generator
     {
         private readonly SizeGenerator _sizeGenerator;
-        private readonly TimeSpanGenerator _timeSpanGenator;
+        private readonly TimeSpanGenerator _timeSpanGenerator;
+        private readonly TemperatureGenerator _tempGenerator;
+        private readonly WaterPrevelanceGenerator _waterGenerator;
 
-        public Generator(SizeGenerator sizeGenerator, TimeSpanGenerator timeSpanGenerator)
+        public Generator(SizeGenerator sizeGenerator, TimeSpanGenerator timeSpanGenerator, TemperatureGenerator tempGenerator,
+            WaterPrevelanceGenerator waterGenerator)
         {
             _sizeGenerator = sizeGenerator;
-            _timeSpanGenator = timeSpanGenerator;
+            _timeSpanGenerator = timeSpanGenerator;
+            _tempGenerator = tempGenerator;
+            _waterGenerator = waterGenerator;
         }
 
         public Planet GeneratePlanet()
@@ -24,25 +25,28 @@ namespace PlanetGenerator
             var radius = _sizeGenerator.GeneratePlanetRadius();
             var size = _sizeGenerator.PlanetSize(radius);
 
-            var LenghtOfDay = _timeSpanGenator.LengthOfDay();
-            var LenghtOfYear = _timeSpanGenator.LenghtOfYear();
-            var LocalDaysInYear = _timeSpanGenator.LengthOfYearInLocalDays(LenghtOfDay.TotalHours, LenghtOfYear.TotalHours);
+            var lengthOfDay = _timeSpanGenerator.LengthOfDay();
+            var lengthOfYear = _timeSpanGenerator.LengthOfYear();
+            var localDaysInYear = _timeSpanGenerator.LengthOfYearInLocalDays(lengthOfDay.TotalHours, lengthOfYear.TotalHours);
+
+            var tempRange = _tempGenerator.GenerateTemperatureRange();
+            var waterPrevelance = _waterGenerator.GenerateWaterPrevelance();
 
             var planet = new Planet
             {   
-                Name = "Bitchplanet", 
+                Name = "Planet", 
                 PlanetType = PlanetType.Earth, 
                 Moons = null, 
                 PlanetColors = new Color[1],
                 Size = size,
                 Radius = radius,
-                TemperatureRange = new Dictionary<float, float>(0),
+                TemperatureRange = tempRange,
                 AverageTemperature = 0,
-                WaterPrevelance = new Dictionary<decimal, decimal>(0),
+                WaterPrevelance = waterPrevelance,
                 IsLifeSupporting = true,
-                LengthOfDay = LenghtOfDay,
-                LengthOfYear = LenghtOfYear,
-                LocalDaysInYear = LocalDaysInYear
+                LengthOfDay = lengthOfDay,
+                LengthOfYear = lengthOfYear,
+                LocalDaysInYear = localDaysInYear
             };
 
             return planet;
