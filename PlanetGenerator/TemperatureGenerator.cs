@@ -8,41 +8,40 @@ namespace PlanetGenerator
 {
     public class TemperatureGenerator
     {
-        private class PlanetTemp
-        {
-            private readonly decimal _maxTemp;
-            private readonly decimal _minTemp;
-
-            public PlanetTemp(decimal maxTemp, decimal minTemp)
-            {
-                _maxTemp = maxTemp;
-                _minTemp = minTemp;
-            }
-        }
-
-        private static readonly PlanetTemp Earth = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Mercury = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Venus = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Mars = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Jupiter = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Saturn = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Uranus = new(0.0m, 0.0m);
-        private static readonly PlanetTemp Neptune = new(0.0m, 0.0m);
-
-        private readonly PlanetTemp[] PlanetTempArr =
-        {
-            Earth, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune
-        };
+        private readonly Random rnd = new Random();
+       
+        private decimal earthMaxTemp = 56.7m;
+        private decimal earthMinTemp = -89.2m;
+        private decimal earthAvgTemp = 16m;
 
         public TemperatureRange GenerateTemperatureRange()
         {
-            var maxTemperature = 71.3f;
-            var minTemperature = -34.9f;
-            var tempRange = new TemperatureRange(minTemperature, maxTemperature);
+            decimal minTemp = earthMinTemp * rnd.Next(750, 1750);
+            decimal avgTemp = earthAvgTemp * rnd.Next(750, 1250);
+            decimal maxTemp = earthMaxTemp * rnd.Next(750, 1250);
 
+            var maxTemperature = rnd.Next((int)avgTemp, (int)maxTemp);
+            var minTemperature = rnd.Next((int)minTemp, (int)avgTemp);
 
+            return new TemperatureRange((float)minTemperature/1000, (float)maxTemperature/1000);
+        }
 
-            return tempRange;
+        public float GenerateAverageTemperature(TemperatureRange tempRange)
+        {
+            decimal range = (decimal)tempRange.MaxTemperature - (decimal)tempRange.MinTemperature;
+
+            if(tempRange.MinTemperature > 0)
+                range = (decimal)tempRange.MaxTemperature + (decimal)tempRange.MinTemperature;
+
+            var sum1 = ((range / 2) * rnd.Next(50, 95)) / 100;
+            var result = range - sum1;
+           
+            decimal minValue = ((decimal)tempRange.MaxTemperature - result) * 1000;
+            decimal maxValue = ((decimal)tempRange.MinTemperature + result) * 1000;
+
+            var average = rnd.Next((int)minValue, (int)maxValue);
+
+            return (float)average / 1000;
         }
     }
 }

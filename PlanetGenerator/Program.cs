@@ -31,6 +31,8 @@ namespace PlanetGenerator
 
         private static void ShowPlanetInfo(Planet planet)
         {
+            Console.WriteLine($"Name: {planet.Name}");
+            Console.WriteLine($"Type: {planet.PlanetType}");
             Console.WriteLine($"Radius: {planet.Radius} km");
             Console.WriteLine($"Size: {planet.Size} x Earth");
             Console.WriteLine($"Duration of day: {Math.Round(planet.LengthOfDay.TotalHours)} hours");
@@ -41,6 +43,8 @@ namespace PlanetGenerator
             Console.WriteLine($"Saltwater: {planet.WaterPrevelance.SaltWater()}");
             Console.WriteLine($"Surface water: {planet.WaterPrevelance.SurfaceWater()}");
             Console.WriteLine($"Subterranean water: {planet.WaterPrevelance.SubterraneanWater()}");
+            Console.WriteLine($"Temperature range: {planet.TemperatureRange.MinTemperature} °C / {planet.TemperatureRange.MaxTemperature} °C");
+            Console.WriteLine($"Average surface temperature: {planet.AverageTemperature} °C");
         }
 
         private static Planet GeneratePlanet(Generator generator)

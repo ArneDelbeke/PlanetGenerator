@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PlanetGenerator
 {
     public enum PlanetType
     {
-        Earth,
+        Earthlike,
         Rocky,
-        Water,
+        Ocean,
         Desert,
-        Frozen
+        Frozen,
+        Humid,
+        IceGiant,
+        GassGiant,
+        RockyFurnace
     }
 }
