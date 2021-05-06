@@ -38,7 +38,7 @@ namespace PlanetGenerator
             Console.WriteLine($"Duration of day: {Math.Round(planet.LengthOfDay.TotalHours)} hours");
             Console.WriteLine($"Duration of year: {Math.Round(planet.LengthOfYear.TotalDays)} earth days");
             Console.WriteLine($"Duration of year in local days: {planet.LocalDaysInYear} {planet.Name} days");
-            Console.WriteLine($"Water prevalence: {planet.WaterPrevelance.WaterPercentage}");
+            Console.WriteLine($"Water prevalence: {planet.WaterPrevelance.WaterPercentage} %");
             Console.WriteLine($"Freshwater: {planet.WaterPrevelance.FreshWater()}");
             Console.WriteLine($"Saltwater: {planet.WaterPrevelance.SaltWater()}");
             Console.WriteLine($"Surface water: {planet.WaterPrevelance.SurfaceWater()}");

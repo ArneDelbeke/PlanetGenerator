@@ -18,7 +18,7 @@ namespace PlanetGenerator
         {
             decimal minTemp = earthMinTemp * rnd.Next(750, 1750);
             decimal avgTemp = earthAvgTemp * rnd.Next(750, 1250);
-            decimal maxTemp = earthMaxTemp * rnd.Next(750, 1250);
+            decimal maxTemp = earthMaxTemp * rnd.Next(750, 1750);
 
             var maxTemperature = rnd.Next((int)avgTemp, (int)maxTemp);
             var minTemperature = rnd.Next((int)minTemp, (int)avgTemp);
