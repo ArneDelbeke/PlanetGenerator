@@ -8,7 +8,9 @@ namespace PlanetGenerator
         private decimal _maxWater;
         public WaterPrevelance GenerateWaterPrevelance()
         {
-            const decimal waterPercentage = 50.0m;
+
+            decimal waterPercentage = _rnd.Next(10000);
+            waterPercentage /= 100;
             _maxWater = 100000.0m;
 
             var oceanWater = GetOceanWater();

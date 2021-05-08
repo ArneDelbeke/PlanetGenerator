@@ -19,5 +19,9 @@ namespace PlanetGenerator
         public TimeSpan LengthOfDay { get; set; }
         public TimeSpan LengthOfYear { get; set; }
         public double LocalDaysInYear { get; set; }
+
+        // Oxygen
+
+        // Gravity
     }
 }

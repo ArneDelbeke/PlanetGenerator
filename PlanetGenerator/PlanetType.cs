@@ -9,8 +9,8 @@ namespace PlanetGenerator
         Rocky,
         Ocean,
         Desert,
-        Frozen,
         Humid,
+        Frozen,
         IceGiant,
         GassGiant,
         RockyFurnace
