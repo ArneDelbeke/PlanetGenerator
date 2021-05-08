@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using Newtonsoft.Json;
 
 namespace PlanetGenerator
 {
@@ -12,13 +14,15 @@ namespace PlanetGenerator
             var waterGenerator = new WaterPrevelanceGenerator();
 
             var generator = new Generator(sizeGenerator, timeSpanGenerator, tempGenerator, waterGenerator);
-
+            
             RefreshPlanet(generator);
+            LoadJson();
 
             while (Console.ReadKey().Key == ConsoleKey.Spacebar)
             {
                 RefreshPlanet(generator);
             }
+            
         }
 
         private static void RefreshPlanet(Generator generator)
@@ -50,6 +54,22 @@ namespace PlanetGenerator
         private static Planet GeneratePlanet(Generator generator)
         {
             return generator.GeneratePlanet();
+        }
+
+        public static void LoadJson()
+        {
+            string json;
+            using (StreamReader r =
+                new StreamReader(@"C:\Users\arne_\Desktop\Innovative Proj\PlanetGenerator\PlanetGenerator\result.json"))
+            {
+                json = r.ReadToEnd();
+                Pantheons.Root root = JsonConvert.DeserializeObject<Pantheons.Root>(json);
+
+                foreach (var god in root.norseGods)
+                {
+                    Console.WriteLine("{0} {1}", god.Name, god.Description );
+                }
+            }
         }
     }
 }
