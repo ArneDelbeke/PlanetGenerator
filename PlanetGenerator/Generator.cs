@@ -13,8 +13,10 @@ namespace PlanetGenerator
         private readonly TimeSpanGenerator _timeSpanGenerator;
         private readonly TemperatureGenerator _tempGenerator;
         private readonly WaterPrevelanceGenerator _waterGenerator;
+        private Pantheons.Root root = new();
 
-        public Generator(SizeGenerator sizeGenerator, TimeSpanGenerator timeSpanGenerator, TemperatureGenerator tempGenerator,
+        public Generator(SizeGenerator sizeGenerator, TimeSpanGenerator timeSpanGenerator,
+            TemperatureGenerator tempGenerator,
             WaterPrevelanceGenerator waterGenerator)
         {
             _sizeGenerator = sizeGenerator;
@@ -25,10 +27,13 @@ namespace PlanetGenerator
 
         public Planet GeneratePlanet()
         {
+            LoadJson();
+            var name = $"{SelectGod().Name} - {SelectGod().Description}";
+
             var planetType = PlanetTypeSelector();
             var radius = _sizeGenerator.GeneratePlanetRadius();
             var size = _sizeGenerator.PlanetSize(radius);
-
+            
             var lengthOfDay = _timeSpanGenerator.LengthOfDay();
             var lengthOfYear = _timeSpanGenerator.LengthOfYear();
             var localDaysInYear = _timeSpanGenerator.LengthOfYearInLocalDays(lengthOfDay.TotalHours, lengthOfYear.TotalHours);
@@ -38,9 +43,10 @@ namespace PlanetGenerator
 
             var waterPrevelance = _waterGenerator.GenerateWaterPrevelance();
 
+
             var planet = new Planet
             {   
-                Name = "Planet", 
+                Name = name, 
                 PlanetType = planetType, 
                 Moons = null, 
                 PlanetColors = new Color[1],
@@ -79,6 +85,53 @@ namespace PlanetGenerator
             };
                 
             return planetType;
+        }
+
+        private PantheonBase SelectGod()
+        {
+            var gods = GetAllGods();
+
+            var random = new Random();
+
+            var number = random.Next(gods.Count - 1);
+
+            return gods[number];
+        }
+
+        public List<PantheonBase> GetAllGods()
+        {
+            var gods = new List<PantheonBase>();
+
+            gods.AddRange(root.africanGods); gods.AddRange(root.australianAboriginal); gods.AddRange(root.aztecGods);
+            gods.AddRange(root.balticGods); gods.AddRange(root.buddhistGods); gods.AddRange(root.canaaniteGods);
+            gods.AddRange(root.caribbeanGods); gods.AddRange(root.celticGods); gods.AddRange(root.chineseGods);
+            gods.AddRange(root.christianSaints); gods.AddRange(root.egyptianGods); gods.AddRange(root.etruscanGods);
+            gods.AddRange(root.finnishGods); gods.AddRange(root.germanicGods); gods.AddRange(root.greekGods);
+            gods.AddRange(root.hawaiianGods); gods.AddRange(root.hinduGods); gods.AddRange(root.hittiteGods);
+            gods.AddRange(root.incaGods); gods.AddRange(root.indonesianGods); gods.AddRange(root.japaneseGods);
+            gods.AddRange(root.latvianGods); gods.AddRange(root.lithuanianGods); gods.AddRange(root.maoriGods);
+            gods.AddRange(root.mayaGods); gods.AddRange(root.melanesianGods); gods.AddRange(root.mesoamericanGods);
+            gods.AddRange(root.mesopotamianGods); gods.AddRange(root.micronesianGods); gods.AddRange(root.middleEasternGods);
+            gods.AddRange(root.nativeAmericanGods); gods.AddRange(root.norseGods); gods.AddRange(root.oceanicGods);
+            gods.AddRange(root.polynesianGods); gods.AddRange(root.romanGods); gods.AddRange(root.samiGods);
+            gods.AddRange(root.siberianGods); gods.AddRange(root.slavicGods); gods.AddRange(root.southAmerican);
+            gods.AddRange(root.southeastAsian); gods.AddRange(root.thaiGods); gods.AddRange(root.vodouGods);
+            gods.AddRange(root.yorubaGods);
+
+            return gods;
+        }
+
+        public void LoadJson()
+        {
+            // C:\Users\arne_\source\repos\PlanetGenerator\PlanetGenerator\result.json -- Laptop
+            // C:\Users\arne_\Desktop\Innovative Proj\PlanetGenerator\PlanetGenerator\result.json -- Desktop
+            string json;
+            using (StreamReader r =
+                new StreamReader(@"C:\Users\arne_\source\repos\PlanetGenerator\PlanetGenerator\result.json"))
+            {
+                json = r.ReadToEnd();
+                root = JsonConvert.DeserializeObject<Pantheons.Root>(json);
+            }
         }
     }
 }
