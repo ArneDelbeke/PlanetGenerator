@@ -28,7 +28,8 @@ namespace PlanetGenerator
         public Planet GeneratePlanet()
         {
             LoadJson();
-            var name = $"{SelectGod().Name} - {SelectGod().Description}";
+            var god = SelectGod();
+            var name = $"{god.Name} - {god.Description}";
 
             var planetType = PlanetTypeSelector();
             var radius = _sizeGenerator.GeneratePlanetRadius();
@@ -105,7 +106,7 @@ namespace PlanetGenerator
             gods.AddRange(root.africanGods); gods.AddRange(root.australianAboriginal); gods.AddRange(root.aztecGods);
             gods.AddRange(root.balticGods); gods.AddRange(root.buddhistGods); gods.AddRange(root.canaaniteGods);
             gods.AddRange(root.caribbeanGods); gods.AddRange(root.celticGods); gods.AddRange(root.chineseGods);
-            gods.AddRange(root.christianSaints); gods.AddRange(root.egyptianGods); gods.AddRange(root.etruscanGods);
+            gods.AddRange(root.egyptianGods); gods.AddRange(root.etruscanGods);
             gods.AddRange(root.finnishGods); gods.AddRange(root.germanicGods); gods.AddRange(root.greekGods);
             gods.AddRange(root.hawaiianGods); gods.AddRange(root.hinduGods); gods.AddRange(root.hittiteGods);
             gods.AddRange(root.incaGods); gods.AddRange(root.indonesianGods); gods.AddRange(root.japaneseGods);
@@ -116,7 +117,7 @@ namespace PlanetGenerator
             gods.AddRange(root.polynesianGods); gods.AddRange(root.romanGods); gods.AddRange(root.samiGods);
             gods.AddRange(root.siberianGods); gods.AddRange(root.slavicGods); gods.AddRange(root.southAmerican);
             gods.AddRange(root.southeastAsian); gods.AddRange(root.thaiGods); gods.AddRange(root.vodouGods);
-            gods.AddRange(root.yorubaGods);
+            gods.AddRange(root.yorubaGods); gods.AddRange(root.christianSaints);
 
             return gods;
         }
