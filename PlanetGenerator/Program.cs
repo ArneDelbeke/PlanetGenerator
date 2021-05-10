@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-using Newtonsoft.Json;
 
 namespace PlanetGenerator
 {
@@ -12,8 +10,9 @@ namespace PlanetGenerator
             var timeSpanGenerator = new TimeSpanGenerator();
             var tempGenerator = new TemperatureGenerator();
             var waterGenerator = new WaterPrevelanceGenerator();
+            var moonGenerator = new MoonGenerator();
 
-            var generator = new Generator(sizeGenerator, timeSpanGenerator, tempGenerator, waterGenerator);
+            var generator = new Generator(sizeGenerator, timeSpanGenerator, tempGenerator, moonGenerator, waterGenerator);
             
             RefreshPlanet(generator);
 
@@ -21,7 +20,6 @@ namespace PlanetGenerator
             {
                 RefreshPlanet(generator);
             }
-            
         }
 
         private static void RefreshPlanet(Generator generator)
@@ -34,10 +32,14 @@ namespace PlanetGenerator
 
         private static void ShowPlanetInfo(Planet planet)
         {
-            Console.WriteLine($"Name: {planet.Name}");
+            Console.WriteLine($"{planet.Name.ToUpper()}");
+            Console.WriteLine("");
+            Console.WriteLine($"Showing statistics for planet {planet.Name}, named after the {planet.NameDescription} \n");
+            
             Console.WriteLine($"Type: {planet.PlanetType}");
             Console.WriteLine($"Radius: {planet.Radius} km");
             Console.WriteLine($"Size: {planet.Size} x Earth");
+            Console.WriteLine($"Number of moons: {planet.Moons}");
             Console.WriteLine($"Duration of day: {Math.Round(planet.LengthOfDay.TotalHours)} hours");
             Console.WriteLine($"Duration of year: {Math.Round(planet.LengthOfYear.TotalDays)} earth days");
             Console.WriteLine($"Duration of year in local days: {planet.LocalDaysInYear} {planet.Name} days");

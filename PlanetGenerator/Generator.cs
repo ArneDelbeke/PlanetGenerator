@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 
 namespace PlanetGenerator
@@ -13,23 +11,26 @@ namespace PlanetGenerator
         private readonly TimeSpanGenerator _timeSpanGenerator;
         private readonly TemperatureGenerator _tempGenerator;
         private readonly WaterPrevelanceGenerator _waterGenerator;
-        private Pantheons.Root root = new();
+        private readonly MoonGenerator _moonGenerator;
+        private Pantheons.Root _root = new();
 
         public Generator(SizeGenerator sizeGenerator, TimeSpanGenerator timeSpanGenerator,
-            TemperatureGenerator tempGenerator,
+            TemperatureGenerator tempGenerator, MoonGenerator moonGenerator,
             WaterPrevelanceGenerator waterGenerator)
         {
             _sizeGenerator = sizeGenerator;
             _timeSpanGenerator = timeSpanGenerator;
             _tempGenerator = tempGenerator;
             _waterGenerator = waterGenerator;
+            _moonGenerator = moonGenerator;
         }
 
         public Planet GeneratePlanet()
         {
             LoadJson();
             var god = SelectGod();
-            var name = $"{god.Name} - {god.Description}";
+            var name = $"{god.Name}";
+            var nameDescription = $"{god.Description}";
 
             var planetType = PlanetTypeSelector();
             var radius = _sizeGenerator.GeneratePlanetRadius();
@@ -43,14 +44,14 @@ namespace PlanetGenerator
             var avgTemp = _tempGenerator.GenerateAverageTemperature(tempRange);
 
             var waterPrevelance = _waterGenerator.GenerateWaterPrevelance();
-
+            var moons = _moonGenerator.GenerateMoons();
 
             var planet = new Planet
             {   
                 Name = name, 
+                NameDescription = nameDescription,
+                Moons = moons,
                 PlanetType = planetType, 
-                Moons = null, 
-                PlanetColors = new Color[1],
                 Size = size,
                 Radius = radius,
                 TemperatureRange = tempRange,
@@ -93,7 +94,6 @@ namespace PlanetGenerator
             var gods = GetAllGods();
 
             var random = new Random();
-
             var number = random.Next(gods.Count - 1);
 
             return gods[number];
@@ -103,36 +103,31 @@ namespace PlanetGenerator
         {
             var gods = new List<PantheonBase>();
 
-            gods.AddRange(root.africanGods); gods.AddRange(root.australianAboriginal); gods.AddRange(root.aztecGods);
-            gods.AddRange(root.balticGods); gods.AddRange(root.buddhistGods); gods.AddRange(root.canaaniteGods);
-            gods.AddRange(root.caribbeanGods); gods.AddRange(root.celticGods); gods.AddRange(root.chineseGods);
-            gods.AddRange(root.egyptianGods); gods.AddRange(root.etruscanGods);
-            gods.AddRange(root.finnishGods); gods.AddRange(root.germanicGods); gods.AddRange(root.greekGods);
-            gods.AddRange(root.hawaiianGods); gods.AddRange(root.hinduGods); gods.AddRange(root.hittiteGods);
-            gods.AddRange(root.incaGods); gods.AddRange(root.indonesianGods); gods.AddRange(root.japaneseGods);
-            gods.AddRange(root.latvianGods); gods.AddRange(root.lithuanianGods); gods.AddRange(root.maoriGods);
-            gods.AddRange(root.mayaGods); gods.AddRange(root.melanesianGods); gods.AddRange(root.mesoamericanGods);
-            gods.AddRange(root.mesopotamianGods); gods.AddRange(root.micronesianGods); gods.AddRange(root.middleEasternGods);
-            gods.AddRange(root.nativeAmericanGods); gods.AddRange(root.norseGods); gods.AddRange(root.oceanicGods);
-            gods.AddRange(root.polynesianGods); gods.AddRange(root.romanGods); gods.AddRange(root.samiGods);
-            gods.AddRange(root.siberianGods); gods.AddRange(root.slavicGods); gods.AddRange(root.southAmerican);
-            gods.AddRange(root.southeastAsian); gods.AddRange(root.thaiGods); gods.AddRange(root.vodouGods);
-            gods.AddRange(root.yorubaGods); gods.AddRange(root.christianSaints);
+            gods.AddRange(_root.africanGods); gods.AddRange(_root.australianAboriginal); gods.AddRange(_root.aztecGods);
+            gods.AddRange(_root.balticGods); gods.AddRange(_root.buddhistGods); gods.AddRange(_root.canaaniteGods);
+            gods.AddRange(_root.caribbeanGods); gods.AddRange(_root.celticGods); gods.AddRange(_root.chineseGods);
+            gods.AddRange(_root.egyptianGods); gods.AddRange(_root.etruscanGods);
+            gods.AddRange(_root.finnishGods); gods.AddRange(_root.germanicGods); gods.AddRange(_root.greekGods);
+            gods.AddRange(_root.hawaiianGods); gods.AddRange(_root.hinduGods); gods.AddRange(_root.hittiteGods);
+            gods.AddRange(_root.incaGods); gods.AddRange(_root.indonesianGods); gods.AddRange(_root.japaneseGods);
+            gods.AddRange(_root.latvianGods); gods.AddRange(_root.lithuanianGods); gods.AddRange(_root.maoriGods);
+            gods.AddRange(_root.mayaGods); gods.AddRange(_root.melanesianGods); gods.AddRange(_root.mesoamericanGods);
+            gods.AddRange(_root.mesopotamianGods); gods.AddRange(_root.micronesianGods); gods.AddRange(_root.middleEasternGods);
+            gods.AddRange(_root.nativeAmericanGods); gods.AddRange(_root.norseGods); gods.AddRange(_root.oceanicGods);
+            gods.AddRange(_root.polynesianGods); gods.AddRange(_root.romanGods); gods.AddRange(_root.samiGods);
+            gods.AddRange(_root.siberianGods); gods.AddRange(_root.slavicGods); gods.AddRange(_root.southAmerican);
+            gods.AddRange(_root.southeastAsian); gods.AddRange(_root.thaiGods); gods.AddRange(_root.vodouGods);
+            gods.AddRange(_root.yorubaGods); gods.AddRange(_root.christianSaints);
 
             return gods;
         }
 
         public void LoadJson()
         {
-            // C:\Users\arne_\source\repos\PlanetGenerator\PlanetGenerator\result.json -- Laptop
-            // C:\Users\arne_\Desktop\Innovative Proj\PlanetGenerator\PlanetGenerator\result.json -- Desktop
-            string json;
-            using (StreamReader r =
-                new StreamReader(@"C:\Users\arne_\source\repos\PlanetGenerator\PlanetGenerator\result.json"))
-            {
-                json = r.ReadToEnd();
-                root = JsonConvert.DeserializeObject<Pantheons.Root>(json);
-            }
+            using var r =
+                new StreamReader(@"C:\Users\arne_\Desktop\Innovative Proj\PlanetGenerator\PlanetGenerator\result.json");
+            var json = r.ReadToEnd();
+            _root = JsonConvert.DeserializeObject<Pantheons.Root>(json);
         }
     }
 }

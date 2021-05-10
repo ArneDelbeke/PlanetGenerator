@@ -6,38 +6,66 @@ namespace PlanetGenerator
     {
         private readonly Random _rnd = new();
         private decimal _maxWater;
-        public WaterPrevelance GenerateWaterPrevelance()
-        {
+        private decimal _oceanWater;
+        private decimal _salineLakes;
+        private decimal _freshWaterLakes;
+        private decimal _freshGroundWater;
+        private decimal _glaciers;
+        private decimal _swamps;
+        private decimal _rivers;
+        private decimal _groundIceAndPermafrost;
+        private decimal _salineGroundWater;
+        private decimal _soilMoisture;
+        private decimal _atmosphere;
 
+        public WaterPrevelance GenerateWaterPrevelance(PlanetType planetType)
+        {
             decimal waterPercentage = _rnd.Next(10000);
             waterPercentage /= 100;
             _maxWater = 100000.0m;
 
-            var oceanWater = GetOceanWater();
-            var salineLakes = GetSalineLakes();
-            var freshWaterLakes = GetFreshWaterLakes();
-            var freshGroundWater = GetFreshGroundWater();
-            var glaciers = GetGlaciers();
-            var swamps = GetSwamps();
-            var rivers = GetRivers();
-            var groundIceAndPermafrost = GetGroundIce();
-            var salineGroundWater = GetSalineGroundWater();
-            var soilMoisture = GetSoilMoisture();
-            var atmosphere = GetAtmosphere();
-
+            switch (planetType)
+            {
+                case PlanetType.Earthlike:
+                    EarthLikePlanetWater();
+                    break;
+                case PlanetType.Rocky:
+                    RockyPlanetWater();
+                    break;
+                case PlanetType.Desert:
+                    DesertPlanetWater();
+                    break;
+                case PlanetType.Frozen:
+                    FrozenPlanetWater();
+                    break;
+                case PlanetType.Humid:
+                    HumidPlanetWater();
+                    break;
+                case PlanetType.Ocean:
+                    OceanPlanetWater();
+                    break;
+                case PlanetType.IceGiant:
+                case PlanetType.GassGiant:
+                case PlanetType.RockyFurnace:
+                    NoPlanetWater();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(planetType), planetType, null);
+            }
+            
             var waterDistribution = new WaterDistribution()
             {
-                OceanWater = oceanWater,
-                SalineLakes = salineLakes,
-                SalineGroundWater = salineGroundWater,
-                Glaciers = glaciers,
-                FreshWaterLakes = freshWaterLakes,
-                Atmosphere = atmosphere,
-                Rivers = rivers,
-                Swamps = swamps,
-                GroundIceAndPermafrost = groundIceAndPermafrost,
-                FreshGroundWater = freshGroundWater,
-                SoilMoisture = soilMoisture
+                OceanWater = _oceanWater,
+                SalineLakes = _salineLakes,
+                SalineGroundWater = _salineGroundWater,
+                Glaciers = _glaciers,
+                FreshWaterLakes = _freshWaterLakes,
+                Atmosphere = _atmosphere,
+                Rivers = _rivers,
+                Swamps = _swamps,
+                GroundIceAndPermafrost = _groundIceAndPermafrost,
+                FreshGroundWater = _freshGroundWater,
+                SoilMoisture = _soilMoisture
             };
 
             var waterPrev = new WaterPrevelance()
@@ -47,6 +75,51 @@ namespace PlanetGenerator
             };
 
             return waterPrev;
+        }
+
+        private void EarthLikePlanetWater()
+        {
+            _oceanWater = GetOceanWater();
+            _salineLakes = GetSalineLakes();
+            _freshWaterLakes = GetFreshWaterLakes();
+            _freshGroundWater = GetFreshGroundWater();
+            _glaciers = GetGlaciers();
+            _swamps = GetSwamps();
+            _rivers = GetRivers();
+            _groundIceAndPermafrost = GetGroundIce();
+            _salineGroundWater = GetSalineGroundWater();
+            _soilMoisture = GetSoilMoisture();
+            _atmosphere = GetAtmosphere();
+        }
+
+        private void RockyPlanetWater()
+        {
+
+        }
+
+        private void HumidPlanetWater()
+        {
+
+        }
+
+        private void DesertPlanetWater()
+        {
+
+        }
+
+        private void FrozenPlanetWater()
+        {
+
+        }
+
+        private void OceanPlanetWater()
+        {
+
+        }
+
+        private void NoPlanetWater()
+        {
+
         }
 
         private decimal GetOceanWater()

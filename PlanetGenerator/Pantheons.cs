@@ -4,7 +4,6 @@ namespace PlanetGenerator
 {
     public class Pantheons
     {
-        // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse); 
         public class AfricanGod : PantheonBase { }
         public class AustralianAboriginal : PantheonBase { }
         public class AztecGod : PantheonBase { }

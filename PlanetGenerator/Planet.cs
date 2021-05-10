@@ -7,9 +7,9 @@ namespace PlanetGenerator
     public class Planet
     {
         public string Name { get; set; }
+        public string NameDescription { get; set; }
         public PlanetType PlanetType { get; set; }
-        public ICollection<Moon>? Moons { get; set; }
-        public Color[] PlanetColors { get; set; }
+        public int Moons { get; set; }
         public float Size { get; set; }
         public int Radius { get; set; }
         public TemperatureRange TemperatureRange { get; set; }
