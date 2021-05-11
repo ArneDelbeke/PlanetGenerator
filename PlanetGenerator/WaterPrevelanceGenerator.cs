@@ -18,9 +18,41 @@ namespace PlanetGenerator
         private decimal _soilMoisture;
         private decimal _atmosphere;
 
+        private enum Possibility
+        {
+            No,
+            VeryLow,
+            Low,
+            Medium, 
+            High,
+            VeryHigh,
+            Skip
+        }
+
         public WaterPrevelance GenerateWaterPrevelance(PlanetType planetType)
         {
-            decimal waterPercentage = _rnd.Next(10000);
+            var waterPercentage = planetType switch
+            {
+                PlanetType.Desert
+                    => _rnd.Next(500),
+                PlanetType.GassGiant
+                    => 0.0m,
+                PlanetType.IceGiant
+                    => 0.0m,
+                PlanetType.Earthlike
+                    => _rnd.Next(5000, 9000),
+                PlanetType.Frozen
+                    => _rnd.Next(500, 9000),
+                PlanetType.Ocean
+                    => _rnd.Next(9000, 10000),
+                PlanetType.Humid
+                    => _rnd.Next(5000, 8500),
+                PlanetType.Rocky
+                    => _rnd.Next(2500),
+                PlanetType.RockyFurnace
+                    => 0.0m
+            };
+
             waterPercentage /= 100;
             _maxWater = 100000.0m;
 
@@ -79,134 +111,370 @@ namespace PlanetGenerator
 
         private void EarthLikePlanetWater()
         {
-            _oceanWater = GetOceanWater();
-            _salineLakes = GetSalineLakes();
-            _freshWaterLakes = GetFreshWaterLakes();
-            _freshGroundWater = GetFreshGroundWater();
-            _glaciers = GetGlaciers();
-            _swamps = GetSwamps();
-            _rivers = GetRivers();
-            _groundIceAndPermafrost = GetGroundIce();
-            _salineGroundWater = GetSalineGroundWater();
-            _soilMoisture = GetSoilMoisture();
-            _atmosphere = GetAtmosphere();
+             _oceanWater = GetOceanWater(Possibility.VeryHigh);
+            _glaciers = GetGlaciers(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Medium);
+            _freshGroundWater = GetFreshGroundWater(Possibility.Medium);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.Low);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _soilMoisture = GetSoilMoisture(Possibility.Low);
+            _atmosphere = GetAtmosphere(Possibility.VeryLow);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = _maxWater/1000;
         }
 
         private void RockyPlanetWater()
         {
-
+            _freshGroundWater = GetFreshGroundWater(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Low);
+            _soilMoisture = GetSoilMoisture(Possibility.VeryLow);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.VeryLow);
+            _oceanWater = GetOceanWater(Possibility.High);
+            _glaciers = GetGlaciers(Possibility.Medium);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = GetRivers(Possibility.VeryLow);
+            _atmosphere = _maxWater / 1000;
         }
 
         private void HumidPlanetWater()
         {
-
+            _oceanWater = GetOceanWater(Possibility.VeryHigh);
+            _glaciers = GetGlaciers(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Medium);
+            _freshGroundWater = GetFreshGroundWater(Possibility.Medium);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.Low);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _soilMoisture = GetSoilMoisture(Possibility.Low);
+            _atmosphere = GetAtmosphere(Possibility.VeryLow);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = _maxWater / 1000;
         }
 
         private void DesertPlanetWater()
         {
-
+            _freshGroundWater = GetFreshGroundWater(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Low);
+            _soilMoisture = GetSoilMoisture(Possibility.VeryLow);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.VeryLow);
+            _oceanWater = GetOceanWater(Possibility.High);
+            _glaciers = GetGlaciers(Possibility.Medium);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = GetRivers(Possibility.VeryLow);
+            _atmosphere = _maxWater / 1000;
         }
 
         private void FrozenPlanetWater()
         {
-
+            _freshGroundWater = GetFreshGroundWater(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Low);
+            _soilMoisture = GetSoilMoisture(Possibility.VeryLow);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.VeryLow);
+            _oceanWater = GetOceanWater(Possibility.High);
+            _glaciers = GetGlaciers(Possibility.Medium);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = GetRivers(Possibility.VeryLow);
+            _atmosphere = _maxWater / 1000;
         }
 
         private void OceanPlanetWater()
         {
-
+            _oceanWater = GetOceanWater(Possibility.VeryHigh);
+            _glaciers = GetGlaciers(Possibility.Low);
+            _salineGroundWater = GetSalineGroundWater(Possibility.Medium);
+            _freshGroundWater = GetFreshGroundWater(Possibility.Medium);
+            _groundIceAndPermafrost = GetGroundIce(Possibility.Low);
+            _freshWaterLakes = GetFreshWaterLakes(Possibility.Medium);
+            _salineLakes = GetSalineLakes(Possibility.Medium);
+            _soilMoisture = GetSoilMoisture(Possibility.Low);
+            _atmosphere = GetAtmosphere(Possibility.VeryLow);
+            _swamps = GetSwamps(Possibility.VeryLow);
+            _rivers = _maxWater / 1000;
         }
 
         private void NoPlanetWater()
         {
-
+            _oceanWater = 0;
+            _salineLakes = 0;
+            _freshWaterLakes = 0;
+            _freshGroundWater = 0;
+            _glaciers = 0;
+            _swamps = 0;
+            _rivers = 0;
+            _groundIceAndPermafrost = 0;
+            _salineGroundWater = 0;
+            _soilMoisture = 0;
+            _atmosphere = 0;
         }
 
-        private decimal GetOceanWater()
+        private decimal GetOceanWater(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetSalineLakes()
+        private decimal GetSalineLakes(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetSalineGroundWater()
+        private decimal GetSalineGroundWater(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetGlaciers()
+        private decimal GetGlaciers(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetFreshWaterLakes()
+        private decimal GetFreshWaterLakes(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetAtmosphere()
+        private decimal GetAtmosphere(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetSwamps()
+        private decimal GetSwamps(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetRivers()
+        private decimal GetRivers(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetGroundIce()
+        private decimal GetGroundIce(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetFreshGroundWater()
+        private decimal GetFreshGroundWater(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
 
-        private decimal GetSoilMoisture()
+        private decimal GetSoilMoisture(Possibility possibility)
         {
-            var water = (decimal)_rnd.Next((int)_maxWater);
-            _maxWater -= water;
+            decimal water = possibility switch
+            {
+                Possibility.VeryLow
+                    => _rnd.Next((int)(_maxWater * 0.1m)),
+                Possibility.Low
+                    => _rnd.Next((int)(_maxWater * 0.1m),(int)(_maxWater * 0.25m)),
+                Possibility.Medium
+                    => _rnd.Next((int)(_maxWater * 0.25m),(int)(_maxWater * 0.7m)),
+                Possibility.High
+                    => _rnd.Next((int)(_maxWater * 0.7m),(int)(_maxWater * 0.85m)),
+                Possibility.VeryHigh
+                    => _rnd.Next((int)(_maxWater * 0.85m),(int)(_maxWater * 0.98m)),
+                Possibility.No
+                    => 0.0m,
+                Possibility.Skip
+                    => _rnd.Next((int)_maxWater)
+            };
 
+            _maxWater -= water;
             return water / 1000;
         }
     }

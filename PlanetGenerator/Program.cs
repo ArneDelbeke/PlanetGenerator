@@ -39,6 +39,7 @@ namespace PlanetGenerator
             Console.WriteLine($"Type: {planet.PlanetType}");
             Console.WriteLine($"Radius: {planet.Radius} km");
             Console.WriteLine($"Size: {planet.Size} x Earth");
+            Console.WriteLine($"Life supporting: {planet.IsLifeSupporting}");
             Console.WriteLine($"Number of moons: {planet.Moons}");
             Console.WriteLine($"Duration of day: {Math.Round(planet.LengthOfDay.TotalHours)} hours");
             Console.WriteLine($"Duration of year: {Math.Round(planet.LengthOfYear.TotalDays)} earth days");

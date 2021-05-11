@@ -43,8 +43,10 @@ namespace PlanetGenerator
             var tempRange = _tempGenerator.GenerateTemperatureRange();
             var avgTemp = _tempGenerator.GenerateAverageTemperature(tempRange);
 
-            var waterPrevelance = _waterGenerator.GenerateWaterPrevelance();
+            var waterPrevelance = _waterGenerator.GenerateWaterPrevelance(planetType);
             var moons = _moonGenerator.GenerateMoons();
+
+            var isLifeSupporting = GetLifeSupportingValue(planetType);
 
             var planet = new Planet
             {   
@@ -57,7 +59,7 @@ namespace PlanetGenerator
                 TemperatureRange = tempRange,
                 AverageTemperature = avgTemp,
                 WaterPrevelance = waterPrevelance,
-                IsLifeSupporting = true,
+                IsLifeSupporting = isLifeSupporting,
                 LengthOfDay = lengthOfDay,
                 LengthOfYear = lengthOfYear,
                 LocalDaysInYear = localDaysInYear
@@ -87,6 +89,18 @@ namespace PlanetGenerator
             };
                 
             return planetType;
+        }
+
+        public bool GetLifeSupportingValue(PlanetType planetType)
+        {
+            var isLifeSupporting = planetType switch
+            {
+                PlanetType.Desert or PlanetType.Earthlike or PlanetType.Rocky or PlanetType.Ocean or PlanetType.Humid
+                    => true,
+                _ => false
+            };
+
+            return isLifeSupporting;
         }
 
         private PantheonBase SelectGod()
